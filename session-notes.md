@@ -39,3 +39,11 @@
 
 ### Friction Point or Bug Encountered
 - Strict scope rules confined styling changes to `AdminDashboard.css` and `App.jsx` without modifying `App.css`. Because `App.jsx` statically imports `AdminDashboard.jsx` (which imports `AdminDashboard.css`), housing the `.view-switcher` and `.tab-btn` styles inside `AdminDashboard.css` ensured the navigation toggle remained styled across both active views while respecting the file scope constraint.
+
+## Task 1.6 - Production Readiness, Static Build & Deployment Config
+
+### Architectural Decision Made
+- Configured `server.js` to conditionally mount `express.static(path.join(__dirname, 'client/dist'))` and an Express 5-compatible wildcard fallback (`app.get('/{*splat}', ...)`) after API and health routes when `process.env.NODE_ENV === 'production'`, alongside environment-driven CORS (`process.env.CLIENT_ORIGIN`), unifying the full-stack build and runtime lifecycle through root `npm run build` and `npm start` scripts without external container dependencies.
+
+### Friction Point or Bug Encountered
+- Express 5 (`path-to-regexp` v8) rejects bare `'*'` wildcard routes with a `PathError` unless named (`'/{*splat}'`). Additionally, during initial production verification, a lingering development `node` process (`PID 19996`) was still bound to port `5000`, causing requests to hit the development server (`Cannot GET /`) until the stale process was terminated and `NODE_ENV=production node server.js` bound cleanly to port `5000`.
