@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import LeadForm from './components/LeadForm'
 import './App.css'
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
     <main className="app-container">
       <h1>Lead Portal</h1>
       <p data-testid="server-status">{statusText}</p>
+      <LeadForm />
     </main>
   )
 }

@@ -23,3 +23,11 @@
 
 ### Friction Point or Bug Encountered
 - Because React CSR apps serve an empty `<div id="root"></div>` shell over raw `curl http://localhost:5173/`, verifying the rendered `"Backend Status: Connected (ok)"` string required executing a headless Chromium DOM dump (`chrome.exe --headless=new --dump-dom`) alongside `curl` proxy checks so the `useEffect` fetch lifecycle could complete and populate the DOM.
+
+## Task 1.4 - Interactive Lead Capture Form
+
+### Architectural Decision Made
+- Implemented `LeadForm` (`client/src/components/LeadForm.jsx`) using a unified controlled `formData` state object (`useState(INITIAL_FORM_STATE)`) with explicit `isLoading`, `successMessage`, and `errorMessage` states, attaching `noValidate` to the `<form>` element while preserving semantic `required` attributes on inputs so invalid submissions reliably trigger the React `onSubmit` flow and render backend HTTP `400` validation errors in an accessible `role="alert"` banner without clearing existing user input.
+
+### Friction Point or Bug Encountered
+- During automated headless Chrome DevTools Protocol (CDP) verification, connecting to `pages[0]` from `/json` initially attached to an internal browser target rather than the React page tab, returning empty evaluation objects (`{}`). Filtering `/json/list` specifically for `type === 'page'` matching the Vite `localhost` origin resolved target selection and verified the full invalid, in-flight loading, and valid submission states against MongoDB Atlas.
