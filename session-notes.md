@@ -31,3 +31,11 @@
 
 ### Friction Point or Bug Encountered
 - During automated headless Chrome DevTools Protocol (CDP) verification, connecting to `pages[0]` from `/json` initially attached to an internal browser target rather than the React page tab, returning empty evaluation objects (`{}`). Filtering `/json/list` specifically for `type === 'page'` matching the Vite `localhost` origin resolved target selection and verified the full invalid, in-flight loading, and valid submission states against MongoDB Atlas.
+
+## Task 1.5 - Admin Dashboard & Lead Management
+
+### Architectural Decision Made
+- Implemented view switching in `client/src/App.jsx` via local `activeTab` state (`'client' | 'admin'`) rather than introducing a client-side routing dependency (`react-router-dom`), so `AdminDashboard` (`client/src/components/AdminDashboard.jsx`) mounts cleanly when selected, fetches fresh lead data via `GET /api/leads`, and performs optimistic-free confirmed state updates (`prevLeads.filter((lead) => lead._id !== id)`) only after receiving HTTP `200` from `DELETE /api/leads/:id`.
+
+### Friction Point or Bug Encountered
+- Strict scope rules confined styling changes to `AdminDashboard.css` and `App.jsx` without modifying `App.css`. Because `App.jsx` statically imports `AdminDashboard.jsx` (which imports `AdminDashboard.css`), housing the `.view-switcher` and `.tab-btn` styles inside `AdminDashboard.css` ensured the navigation toggle remained styled across both active views while respecting the file scope constraint.
