@@ -15,3 +15,11 @@
 
 ### Friction Point or Bug Encountered
 - Initial verification failed because the MongoDB Atlas cluster rejected the TLS handshake (`ERR_SSL_TLSV1_ALERT_INTERNAL_ERROR` / SSL alert number 80) due to the client IP address not being whitelisted in Atlas Network Access. Halting execution per Rule 5 and updating the Atlas IP access list (`0.0.0.0/0`) resolved the connection error and allowed full end-to-end verification.
+
+## Task 1.3 - Frontend Client Scaffold & API Handshake
+
+### Architectural Decision Made
+- Configured Vite's development server proxy in `client/vite.config.js` to forward both `/api` and `/health` paths (`changeOrigin: true`) to `http://localhost:5000`, allowing the React frontend (`client/src/App.jsx`) to perform relative `fetch('/health')` and `fetch('/api/...')` calls without hardcoded origins or cross-origin preflight overhead during local development.
+
+### Friction Point or Bug Encountered
+- Because React CSR apps serve an empty `<div id="root"></div>` shell over raw `curl http://localhost:5173/`, verifying the rendered `"Backend Status: Connected (ok)"` string required executing a headless Chromium DOM dump (`chrome.exe --headless=new --dump-dom`) alongside `curl` proxy checks so the `useEffect` fetch lifecycle could complete and populate the DOM.
